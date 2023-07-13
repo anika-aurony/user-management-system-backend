@@ -38,12 +38,16 @@ async function run() {
 
         app.post('/user', async (req, res) => {
             const user = req.body;
-
             const result = await usersCollection.insertOne(user);
             res.send(result)
         })
 
-        
+        app.get('/users/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await usersCollection.findOne(query);
+            res.send(result);
+        })
 
         app.delete('/users/:id', async (req, res) => {
             const id = req.params.id;           
@@ -64,7 +68,7 @@ async function run() {
                     phone: userUpdate.phone
                 }
             }
-            const result = await activitiesCollection.updateOne(filter, updatedUser, options);
+            const result = await usersCollection.updateOne(filter, updatedUser, options);
             res.send(result)
         })
 

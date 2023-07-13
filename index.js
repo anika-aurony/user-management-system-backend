@@ -33,8 +33,41 @@ async function run() {
             const cursor = usersCollection.find();
             const result = await cursor.toArray();
             res.send(result);
-            
+
         });
+
+        app.post('/user', async (req, res) => {
+            const user = req.body;
+
+            const result = await usersCollection.insertOne(user);
+            res.send(result)
+        })
+
+        app.delete('/user/:id', async (req, res) => {
+            const id = req.params.id;
+            console.log(id)
+            const query = { _id: id };
+
+            const result = await usersCollection.deleteOne(query);
+            console.log(result)
+            res.send(result);
+        })
+
+        app.put('/users/:id', async (req, res) => {
+            const id = req.params.id;
+            const userUpdate = req.body;
+            const filter = { _id: new ObjectId(id) }
+            const options = { upsert: true }
+            const updatedUser = {
+                $set: {
+                    name: userUpdate.name,
+                    email: userUpdate.email,
+                    phone: userUpdate.phone
+                }
+            }
+            const result = await activitiesCollection.updateOne(filter, updatedUser, options);
+            res.send(result)
+        })
 
 
         // Send a ping to confirm a successful connection

@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 5000;
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 // middleware
 app.use(cors());
@@ -43,15 +43,16 @@ async function run() {
             res.send(result)
         })
 
-        app.delete('/user/:id', async (req, res) => {
-            const id = req.params.id;
-            console.log(id)
-            const query = { _id: id };
+        
 
+        app.delete('/users/:id', async (req, res) => {
+            const id = req.params.id;           
+            const query = { _id: new ObjectId(id) }
+            console.log(query)       
             const result = await usersCollection.deleteOne(query);
             console.log(result)
             res.send(result);
-        })
+          })
 
         app.put('/users/:id', async (req, res) => {
             const id = req.params.id;
